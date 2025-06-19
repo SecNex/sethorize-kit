@@ -14,14 +14,13 @@ import (
 	"gorm.io/gorm"
 )
 
-const tokenSecret = "your-256-bit-secret"
-
 type AuthMiddleware struct {
-	Handler *handler.Handler
+	Handler    *handler.Handler
+	KeyManager *helper.KeyManager
 }
 
 func NewAuthMiddleware(db *gorm.DB) *AuthMiddleware {
-	return &AuthMiddleware{Handler: handler.NewHandler(db)}
+	return &AuthMiddleware{Handler: handler.NewHandler(db), KeyManager: helper.NewKeyManager()}
 }
 
 func (h *AuthMiddleware) ClientMiddleware(next http.Handler) http.Handler {
@@ -68,7 +67,7 @@ func (h *AuthMiddleware) AuthMiddleware(next http.Handler) http.Handler {
 			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 			}
-			return []byte(tokenSecret), nil
+			return h.KeyManager.GetPrivateKey().PublicKey, nil
 		})
 
 		if err != nil {
