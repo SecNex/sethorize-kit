@@ -6,7 +6,6 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
-	"log"
 	"os"
 	"path/filepath"
 )
@@ -31,12 +30,12 @@ func (km *KeyManager) LoadOrGenerateKey() error {
 
 	// Check if key file exists
 	if _, err := os.Stat(keyPath); os.IsNotExist(err) {
-		log.Println("Private Key not found. Generating new Private Key...")
+		fmt.Println("Private Key not found. Generating new Private Key...")
 		return km.generateAndSaveKey(keyPath)
 	}
 
 	// Load existing key
-	log.Println("Loading existing Private Key...")
+	fmt.Println("Loading existing Private Key...")
 	return km.loadKey(keyPath)
 }
 
@@ -64,7 +63,7 @@ func (km *KeyManager) generateAndSaveKey(keyPath string) error {
 		return fmt.Errorf("error saving private key: %v", err)
 	}
 
-	log.Printf("Private Key successfully generated and saved to %s\n", keyPath)
+	fmt.Printf("Private Key successfully generated and saved to %s\n", keyPath)
 	return nil
 }
 
@@ -90,7 +89,7 @@ func (km *KeyManager) loadKey(keyPath string) error {
 	km.PrivateKey = privateKey
 	km.PublicKey = &privateKey.PublicKey
 
-	log.Printf("Private Key successfully loaded from %s\n", keyPath)
+	fmt.Printf("Private Key successfully loaded from %s\n", keyPath)
 	return nil
 }
 

@@ -4,7 +4,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"slices"
 	"strings"
@@ -29,10 +28,10 @@ type AuthorizeResponse struct {
 }
 
 func (h *AuthHandler) Authorize(w http.ResponseWriter, r *http.Request) {
-	log.Println("Authorize request")
+	fmt.Println("Authorize request")
 	session := r.Context().Value("session").(models.Session)
-	log.Println("Session:")
-	log.Println(session)
+	fmt.Println("Session:")
+	fmt.Println(session)
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -41,30 +40,30 @@ func (h *AuthHandler) Authorize(w http.ResponseWriter, r *http.Request) {
 	var request AuthorizeRequest
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {
-		log.Println("Invalid request")
+		fmt.Println("Invalid request")
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
-	log.Println("Request:")
-	log.Println(request)
+	fmt.Println("Request:")
+	fmt.Println(request)
 
 	var client models.Client
 	err = h.Handler.DB.Where("id = ?", request.ClientID).First(&client).Error
 	if err != nil {
-		log.Println("Client not found")
+		fmt.Println("Client not found")
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 
 	if !slices.Contains(client.RedirectURIs, request.RedirectURI) {
-		log.Println("Invalid redirect URI")
+		fmt.Println("Invalid redirect URI")
 		http.Error(w, "Invalid redirect URI", http.StatusBadRequest)
 		return
 	}
 
 	if session.UserID == uuid.Nil {
-		log.Println("Invalid session")
+		fmt.Println("Invalid session")
 		http.Error(w, "Invalid session", http.StatusBadRequest)
 		return
 	}

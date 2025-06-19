@@ -2,7 +2,6 @@ package initializer
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"strings"
 
@@ -29,7 +28,7 @@ func NewInitializer(db *gorm.DB) *Initializer {
 }
 
 func (i *Initializer) Initialize() {
-	log.Println("Initializing basic data...")
+	fmt.Println("Initializing basic data...")
 
 	// 1. Create default tenant
 	tenantID := i.createDefaultTenant()
@@ -42,7 +41,7 @@ func (i *Initializer) Initialize() {
 	// 3. Create admin user
 	i.createAdminUser(tenantID)
 
-	log.Println("DONE!")
+	fmt.Println("DONE!")
 }
 
 func (i *Initializer) createDefaultTenant() uuid.UUID {
@@ -52,7 +51,7 @@ func (i *Initializer) createDefaultTenant() uuid.UUID {
 	// Check if tenant already exists
 	err := i.DB.Where("name = ?", tenantName).First(&tenant).Error
 	if err == nil {
-		log.Printf("Tenant '%s' already exists (ID: %s)", tenantName, tenant.ID)
+		fmt.Printf("Tenant '%s' already exists (ID: %s)", tenantName, tenant.ID)
 		return tenant.ID
 	}
 
@@ -64,11 +63,11 @@ func (i *Initializer) createDefaultTenant() uuid.UUID {
 	var createdTenant models.Tenant
 	err = i.DB.Create(&newTenant).Scan(&createdTenant).Error
 	if err != nil {
-		log.Printf("Error creating tenant: %v", err)
+		fmt.Printf("Error creating tenant: %v", err)
 		return uuid.Nil
 	}
 
-	log.Printf("Tenant '%s' created (ID: %s)", tenantName, createdTenant.ID)
+	fmt.Printf("Tenant '%s' created (ID: %s)", tenantName, createdTenant.ID)
 	return createdTenant.ID
 }
 
@@ -81,7 +80,7 @@ func (i *Initializer) createDefaultClient(tenantID uuid.UUID) {
 	// Check if client already exists
 	err := i.DB.Where("slug = ? AND tenant_id = ?", clientSlug, tenantID).First(&client).Error
 	if err == nil {
-		log.Printf("Default Client already exists (ID: %s)", client.ID)
+		fmt.Printf("Default Client already exists (ID: %s)", client.ID)
 		return
 	}
 
@@ -100,11 +99,11 @@ func (i *Initializer) createDefaultClient(tenantID uuid.UUID) {
 	var createdClient models.Client
 	err = i.DB.Create(&newClient).Scan(&createdClient).Error
 	if err != nil {
-		log.Printf("Error creating default client: %v", err)
+		fmt.Printf("Error creating default client: %v", err)
 		return
 	}
 
-	log.Printf("Default Client created (ID: %s, Secret: %s)", createdClient.ID, token)
+	fmt.Printf("Default Client created (ID: %s, Secret: %s)", createdClient.ID, token)
 }
 
 func (i *Initializer) createCLIClient(tenantID uuid.UUID) {
@@ -116,7 +115,7 @@ func (i *Initializer) createCLIClient(tenantID uuid.UUID) {
 	// Check if client already exists
 	err := i.DB.Where("slug = ? AND tenant_id = ?", clientSlug, tenantID).First(&client).Error
 	if err == nil {
-		log.Printf("CLI Client already exists (ID: %s)", client.ID)
+		fmt.Printf("CLI Client already exists (ID: %s)", client.ID)
 		return
 	}
 
@@ -135,11 +134,11 @@ func (i *Initializer) createCLIClient(tenantID uuid.UUID) {
 	var createdClient models.Client
 	err = i.DB.Create(&newClient).Scan(&createdClient).Error
 	if err != nil {
-		log.Printf("Error creating CLI client: %v", err)
+		fmt.Printf("Error creating CLI client: %v", err)
 		return
 	}
 
-	log.Printf("CLI Client created (ID: %s, Secret: %s)", createdClient.ID, token)
+	fmt.Printf("CLI Client created (ID: %s, Secret: %s)", createdClient.ID, token)
 }
 
 func (i *Initializer) createAccountClient(tenantID uuid.UUID) {
@@ -150,7 +149,7 @@ func (i *Initializer) createAccountClient(tenantID uuid.UUID) {
 	// Check if client already exists
 	err := i.DB.Where("slug = ? AND tenant_id = ?", clientSlug, tenantID).First(&client).Error
 	if err == nil {
-		log.Printf("Account Client already exists (ID: %s)", client.ID)
+		fmt.Printf("Account Client already exists (ID: %s)", client.ID)
 		return
 	}
 
@@ -168,11 +167,11 @@ func (i *Initializer) createAccountClient(tenantID uuid.UUID) {
 
 	err = i.DB.Create(&newClient).Scan(&newClient).Error
 	if err != nil {
-		log.Printf("Error creating account client: %v", err)
+		fmt.Printf("Error creating account client: %v", err)
 		return
 	}
 
-	log.Printf("Account Client created (ID: %s, Secret: %s)", newClient.ID, token)
+	fmt.Printf("Account Client created (ID: %s, Secret: %s)", newClient.ID, token)
 }
 
 func (i *Initializer) createAdminUser(tenantID uuid.UUID) {
@@ -182,7 +181,7 @@ func (i *Initializer) createAdminUser(tenantID uuid.UUID) {
 	// Check if admin user already exists
 	err := i.DB.Where("email = ? AND tenant_id = ?", email, tenantID).First(&user).Error
 	if err == nil {
-		log.Printf("Admin User already exists (ID: %s)", user.ID)
+		fmt.Printf("Admin User already exists (ID: %s)", user.ID)
 		return
 	}
 
@@ -202,9 +201,9 @@ func (i *Initializer) createAdminUser(tenantID uuid.UUID) {
 	var createdUser models.User
 	err = i.DB.Create(&newUser).Scan(&createdUser).Error
 	if err != nil {
-		log.Printf("Error creating admin user: %v", err)
+		fmt.Printf("Error creating admin user: %v", err)
 		return
 	}
 
-	log.Printf("Admin User created (ID: %s, Email: %s)", createdUser.ID, email)
+	fmt.Printf("Admin User created (ID: %s, Email: %s)", createdUser.ID, email)
 }

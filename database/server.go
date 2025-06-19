@@ -2,7 +2,6 @@ package database
 
 import (
 	"fmt"
-	"log"
 
 	"github.com/secnex/sethorize-kit/models"
 	"gorm.io/driver/postgres"
@@ -38,7 +37,7 @@ func (s *Server) Connect() *gorm.DB {
 	}
 	s.DB = db
 
-	log.Println("Migrating models...")
+	fmt.Println("Migrating models...")
 
 	// Aktiviere UUID-Extension
 	s.DB.Exec("CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";")

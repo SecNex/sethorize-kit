@@ -2,7 +2,6 @@ package server
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
 	"github.com/gorilla/mux"
@@ -31,6 +30,6 @@ func NewServer(host string, port int) *Server {
 }
 
 func (s *Server) Start() {
-	log.Printf("Starting server on http://%s:%d...", s.Options.Host, s.Options.Port)
+	fmt.Printf("Starting server on http://%s:%d...", s.Options.Host, s.Options.Port)
 	http.ListenAndServe(fmt.Sprintf("%s:%d", s.Options.Host, s.Options.Port), s.Router)
 }
