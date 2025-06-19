@@ -19,8 +19,8 @@ type AuthMiddleware struct {
 	KeyManager *helper.KeyManager
 }
 
-func NewAuthMiddleware(db *gorm.DB) *AuthMiddleware {
-	return &AuthMiddleware{Handler: handler.NewHandler(db), KeyManager: helper.NewKeyManager()}
+func NewAuthMiddleware(db *gorm.DB, keyManager *helper.KeyManager) *AuthMiddleware {
+	return &AuthMiddleware{Handler: handler.NewHandler(db), KeyManager: keyManager}
 }
 
 func (h *AuthMiddleware) ClientMiddleware(next http.Handler) http.Handler {
