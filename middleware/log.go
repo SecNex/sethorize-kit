@@ -2,17 +2,14 @@ package middleware
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"time"
 )
 
-type HTTPLogger struct {
-	Logger *log.Logger
-}
+type HTTPLogger struct{}
 
-func NewHTTPLogger(logger *log.Logger) *HTTPLogger {
-	return &HTTPLogger{Logger: logger}
+func NewHTTPLogger() *HTTPLogger {
+	return &HTTPLogger{}
 }
 
 // ResponseWriter wrapper to capture status code and content length
@@ -80,8 +77,10 @@ func (hl *HTTPLogger) LoggingMiddleware(next http.Handler) http.Handler {
 			userAgent = "-"
 		}
 
-		// Apache-Format loggen
-		logLine := fmt.Sprintf(`%s - - "%s %s %s" %d %d "%s" "%s" %v`,
+		// Zeitstempel hinzufügen und Apache-Format loggen
+		timestamp := time.Now().Format("2006/01/02 15:04:05")
+		logLine := fmt.Sprintf(`%s %s - - "%s %s %s" %d %d "%s" "%s" %v`,
+			timestamp,
 			clientIP,
 			method,
 			uri,
@@ -93,6 +92,6 @@ func (hl *HTTPLogger) LoggingMiddleware(next http.Handler) http.Handler {
 			time.Since(start),
 		)
 
-		hl.Logger.Println(logLine)
+		fmt.Println(logLine)
 	})
 }
