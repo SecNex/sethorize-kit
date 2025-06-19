@@ -64,10 +64,10 @@ func (h *AuthMiddleware) AuthMiddleware(next http.Handler) http.Handler {
 		accessToken = strings.TrimPrefix(accessToken, "Bearer ")
 
 		token, err := jwt.Parse(accessToken, func(token *jwt.Token) (interface{}, error) {
-			if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
 				return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 			}
-			return h.KeyManager.GetPrivateKey().PublicKey, nil
+			return h.KeyManager.GetPublicKey(), nil
 		})
 
 		if err != nil {
