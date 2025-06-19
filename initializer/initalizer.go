@@ -51,7 +51,7 @@ func (i *Initializer) createDefaultTenant() uuid.UUID {
 	// Check if tenant already exists
 	err := i.DB.Where("name = ?", tenantName).First(&tenant).Error
 	if err == nil {
-		fmt.Printf("Tenant '%s' already exists (ID: %s)", tenantName, tenant.ID)
+		fmt.Printf("Tenant '%s' already exists (ID: %s)\n", tenantName, tenant.ID)
 		return tenant.ID
 	}
 
@@ -63,11 +63,11 @@ func (i *Initializer) createDefaultTenant() uuid.UUID {
 	var createdTenant models.Tenant
 	err = i.DB.Create(&newTenant).Scan(&createdTenant).Error
 	if err != nil {
-		fmt.Printf("Error creating tenant: %v", err)
+		fmt.Printf("Error creating tenant: %v\n", err)
 		return uuid.Nil
 	}
 
-	fmt.Printf("Tenant '%s' created (ID: %s)", tenantName, createdTenant.ID)
+	fmt.Printf("Tenant '%s' created (ID: %s)\n", tenantName, createdTenant.ID)
 	return createdTenant.ID
 }
 
@@ -80,7 +80,7 @@ func (i *Initializer) createDefaultClient(tenantID uuid.UUID) {
 	// Check if client already exists
 	err := i.DB.Where("slug = ? AND tenant_id = ?", clientSlug, tenantID).First(&client).Error
 	if err == nil {
-		fmt.Printf("Default Client already exists (ID: %s)", client.ID)
+		fmt.Printf("Default Client already exists (ID: %s)\n", client.ID)
 		return
 	}
 
@@ -99,11 +99,11 @@ func (i *Initializer) createDefaultClient(tenantID uuid.UUID) {
 	var createdClient models.Client
 	err = i.DB.Create(&newClient).Scan(&createdClient).Error
 	if err != nil {
-		fmt.Printf("Error creating default client: %v", err)
+		fmt.Printf("Error creating default client: %v\n", err)
 		return
 	}
 
-	fmt.Printf("Default Client created (ID: %s, Secret: %s)", createdClient.ID, token)
+	fmt.Printf("Default Client created (ID: %s, Secret: %s)\n", createdClient.ID, token)
 }
 
 func (i *Initializer) createCLIClient(tenantID uuid.UUID) {
@@ -115,7 +115,7 @@ func (i *Initializer) createCLIClient(tenantID uuid.UUID) {
 	// Check if client already exists
 	err := i.DB.Where("slug = ? AND tenant_id = ?", clientSlug, tenantID).First(&client).Error
 	if err == nil {
-		fmt.Printf("CLI Client already exists (ID: %s)", client.ID)
+		fmt.Printf("CLI Client already exists (ID: %s)\n", client.ID)
 		return
 	}
 
@@ -134,11 +134,11 @@ func (i *Initializer) createCLIClient(tenantID uuid.UUID) {
 	var createdClient models.Client
 	err = i.DB.Create(&newClient).Scan(&createdClient).Error
 	if err != nil {
-		fmt.Printf("Error creating CLI client: %v", err)
+		fmt.Printf("Error creating CLI client: %v\n", err)
 		return
 	}
 
-	fmt.Printf("CLI Client created (ID: %s, Secret: %s)", createdClient.ID, token)
+	fmt.Printf("CLI Client created (ID: %s, Secret: %s)\n", createdClient.ID, token)
 }
 
 func (i *Initializer) createAccountClient(tenantID uuid.UUID) {
@@ -149,7 +149,7 @@ func (i *Initializer) createAccountClient(tenantID uuid.UUID) {
 	// Check if client already exists
 	err := i.DB.Where("slug = ? AND tenant_id = ?", clientSlug, tenantID).First(&client).Error
 	if err == nil {
-		fmt.Printf("Account Client already exists (ID: %s)", client.ID)
+		fmt.Printf("Account Client already exists (ID: %s)\n", client.ID)
 		return
 	}
 
@@ -167,11 +167,11 @@ func (i *Initializer) createAccountClient(tenantID uuid.UUID) {
 
 	err = i.DB.Create(&newClient).Scan(&newClient).Error
 	if err != nil {
-		fmt.Printf("Error creating account client: %v", err)
+		fmt.Printf("Error creating account client: %v\n", err)
 		return
 	}
 
-	fmt.Printf("Account Client created (ID: %s, Secret: %s)", newClient.ID, token)
+	fmt.Printf("Account Client created (ID: %s, Secret: %s)\n", newClient.ID, token)
 }
 
 func (i *Initializer) createAdminUser(tenantID uuid.UUID) {
@@ -181,7 +181,7 @@ func (i *Initializer) createAdminUser(tenantID uuid.UUID) {
 	// Check if admin user already exists
 	err := i.DB.Where("email = ? AND tenant_id = ?", email, tenantID).First(&user).Error
 	if err == nil {
-		fmt.Printf("Admin User already exists (ID: %s)", user.ID)
+		fmt.Printf("Admin User already exists (ID: %s)\n", user.ID)
 		return
 	}
 
@@ -201,9 +201,9 @@ func (i *Initializer) createAdminUser(tenantID uuid.UUID) {
 	var createdUser models.User
 	err = i.DB.Create(&newUser).Scan(&createdUser).Error
 	if err != nil {
-		fmt.Printf("Error creating admin user: %v", err)
+		fmt.Printf("Error creating admin user: %v\n", err)
 		return
 	}
 
-	fmt.Printf("Admin User created (ID: %s, Email: %s)", createdUser.ID, email)
+	fmt.Printf("Admin User created (ID: %s, Email: %s)\n", createdUser.ID, email)
 }
